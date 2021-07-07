@@ -399,22 +399,21 @@ when the cache memory was stolen temporary for another operation (like save_stat
 
 void gb_loader_restore_cache() {
 
-
 	/* bank to be refreshed in the cache */
-	uint32_t bank=0;
+	int32_t bank;
 
 	/* Refresh all cache memory parsing the cache index */
 	for (int restored_idx = 0; restored_idx < bank_cache_size; restored_idx++) {
 
 		/* default value if the following loop doesn't find a match */
-		bank=0;
+		bank=-1;
 
 		/* look for the corresponding allocated bank */
-		for (int bank_nb=1; bank_nb < rom_banks_number; bank_nb++)
+		for (int bank_nb=0; bank_nb < rom_banks_number; bank_nb++)
 			if (bank_to_cache_idx[bank_nb] == restored_idx) bank = bank_nb;
 
 		/* if no allocated bank, the default value 0, it corresponds to bank0, nothing to do in this case */
-		if (bank !=0) {
+		if (bank !=-1) {
             /* offset in memory cache of requested bank */
             size_t OFFSET = restored_idx * BANK_SIZE;
             wdog_refresh();
